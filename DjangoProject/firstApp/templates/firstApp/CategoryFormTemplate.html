@@ -1,0 +1,27 @@
+{% extends 'firstApp/BaseTemplate.html' %}
+{% block page_header_title %}
+    {{ page_title }}
+{% endblock %}
+{% block content %}
+    <div class="col-12">
+        <h3>{{ page_title }}</h3>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% with field=form.name %}
+                <div class="form-group">
+                    <label for="{{ field.auto_id }}">{{ field.label }}</label>
+                    <input type="text" class="form-control" id="{{ field.auto_id }}"
+                           value="{{ field.initial }}" name="{{ field.name }}"  placeholder="Enter The Name Of Category">
+                </div>
+            {% endwith %}
+            {% with field=form.slug %}
+                <div class="form-group">
+                    <label for="{{ field.auto_id }}">{{ field.label }}</label>
+                    <input type="text" class="form-control" id="{{ field.auto_id }}"
+                           value="{{ field.initial }}" name="{{ field.name }}"  placeholder="Enter The Slug Of Category">
+                </div>
+            {% endwith %}
+            <button type="submit" class="btn btn-primary">Create Category</button>
+        </form>
+    </div>
+{% endblock %}

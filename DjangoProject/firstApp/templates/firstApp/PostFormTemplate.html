@@ -1,0 +1,30 @@
+{% extends 'firstApp/BaseTemplate.html' %}
+{% block page_header_title %}
+    {{ page_title }}
+{% endblock %}
+{% block content %}
+    <div class="col-12">
+        <h3>{{ page_title }}</h3>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" class="form-control" id="title" name="title"
+                       value="{{ form.instance.title }}" placeholder="Enter The Title Of Post">
+            </div>
+            <div class="form-group">
+                <label for="body">Content</label>
+                <textarea type="text" class="form-control" cols="50" rows="10" id="body"
+                          placeholder="Enter The Content of Your Post"
+                          name="body">{{ form.instance.body }}</textarea>
+            </div>
+            <div class="form-group">
+                {{ form.intro_image }}
+            </div>
+            <div class="form-group">
+                {{ form.categories }}
+            </div>
+            <button type="submit" class="btn btn-primary">Create Post</button>
+        </form>
+    </div>
+{% endblock %}

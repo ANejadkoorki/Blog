@@ -1,0 +1,22 @@
+{% extends 'firstApp/BaseTemplate.html' %}
+{% block page_header_title %}
+    Post : {{ object.title }}
+    {#    when we use DetailView as View the model object name is 'object'#}
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="col12">
+            {% if object.intro_image %}
+                <img src="{{ object.intro_image.url }}" class="img-fluid" name="{{ object.intro_image.name }}">
+            {% endif %}
+            {% if request.user.is_authenticated %}
+                <a href="{% url 'firstApp:edit-post' post.pk %}" class="float-left">🖍</a>
+            {% endif %}
+            <h1 class="h1 font-weight-bold">{{ object.title }}</h1>
+            <p class="fa-paragraph">{{ object.body }}</p>
+            <h3 class="h3 font-weight-bold">{{ object.creator.get_full_name }}</h3>
+            <h3 class="h3">{{ object.time }}</h3>
+
+        </div>
+    </div>
+{% endblock %}
