@@ -25,12 +25,16 @@
                         <a class="nav-link" href="{% url 'users:login' %}">Log in</a>
                     </li>
                 {% endif %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'firstApp:create-post' %}">Create Post</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'firstApp:create-category' %}">Create Category</a>
-                </li>
+                {% if perms.firstApp.add_post %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'firstApp:create-post' %}">Create Post</a>
+                    </li>
+                {% endif %}
+                {% if perms.firstApp.add_category %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'firstApp:create-category' %}">Create Category</a>
+                    </li>
+                {% endif %}
                 {% if  user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'users:logout' %}">Log out</a>
@@ -38,7 +42,7 @@
                 {% endif %}
                 {% if  user.is_authenticated %}
                     <li class="nav-item ">
-                        <a class="nav-link" href="{% url 'users:edit-profile'    %}">{{ request.user.get_full_name }}</a>
+                        <a class="nav-link" href="{% url 'users:edit-profile' %}">{{ request.user.get_full_name }}</a>
                     </li>
                 {% endif %}
             </ul>

@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.core.exceptions import PermissionDenied
 from django.http import JsonResponse, HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
@@ -47,6 +48,8 @@ def like_post(request, id):
 
 @login_required
 def create_post(request):
+    if not request.user.has_perm('firstApp.add_post'):
+        raise PermissionDenied('Access Denied.')
     form_instance = forms.Postform()
     if request.method == 'POST':
         form_instance = forms.Postform(data=request.POST, files=request.FILES)
@@ -93,7 +96,7 @@ def edit_post(request, pk):
         )
 
 
-class CreateCategory(LoginRequiredMixin, CreateView):
+class CreateCategory(PermissionRequiredMixin, CreateView):
     model = models.Category
     fields = (
         'name',
@@ -104,6 +107,7 @@ class CreateCategory(LoginRequiredMixin, CreateView):
     extra_context = {
         'page_title': 'Create A Category'
     }
+    permission_required = 'firstApp.add_category'
 
 
 class UpdateCategory(LoginRequiredMixin, UpdateView):
