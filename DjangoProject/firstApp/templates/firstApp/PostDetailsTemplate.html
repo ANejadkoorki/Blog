@@ -10,7 +10,9 @@
                 <img src="{{ object.intro_image.url }}" class="img-fluid" name="{{ object.intro_image.name }}">
             {% endif %}
             {% if request.user.is_authenticated %}
-                <a href="{% url 'firstApp:edit-post' post.pk %}" class="float-left">🖍</a>
+                {% if post.creator == request.user %}
+                    <a href="{% url 'firstApp:edit-post' post.pk %}" class="float-left">🖍</a>
+                {% endif %}
             {% endif %}
             <h1 class="h1 font-weight-bold">{{ object.title }}</h1>
             <p class="fa-paragraph">{{ object.body }}</p>

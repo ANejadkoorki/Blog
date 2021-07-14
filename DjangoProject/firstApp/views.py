@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
@@ -68,6 +68,8 @@ def edit_post(request, pk):
     edit a post
     """
     post_instance = get_object_or_404(klass=models.Post, pk=pk)
+    if not post_instance.creator == request.user:
+        return HttpResponseForbidden('Access Denied.')
     if request.method == 'POST':
         form_instance = forms.Postform(instance=post_instance, data=request.POST, files=request.FILES)
         if form_instance.is_valid():
