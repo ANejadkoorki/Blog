@@ -16,11 +16,18 @@ from . import models, forms
 
 
 def post_view(request):
-    model_instance = models.Post.objects.all()
+    if request.user.is_authenticated:
+        my_posts = models.Post.objects.filter(creator=request.user)
+        other_posts = models.Post.objects.exclude(creator=request.user)
+    else:
+        my_posts = models.Post.objects.all()
+        other_posts = []
+
     return render(request,
                   template_name='firstApp/PostsTemplate.html',
                   context={
-                      'object_list': model_instance,
+                      'object_list': my_posts,
+                      'object_list2': other_posts,
                       'page_title': 'Posts',
                   }
                   )
