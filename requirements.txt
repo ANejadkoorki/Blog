@@ -1,0 +1,4 @@
+Django
+django-jalali
+psycopg2-binary
+Pillow
