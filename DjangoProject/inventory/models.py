@@ -27,3 +27,18 @@ class Product(models.Model):
         max_length=100,
         choices=enums.ProductTypes.choices
     )
+
+    def __str__(self):
+        return self.name
+
+    def can_be_sold(self):
+        """
+            can this product be sold : returns : boolean
+        """
+        return self.is_active
+
+    def is_in_stock(self, qty):
+        """
+            Is Product in stock with requested qty ? : returns a boolean :
+        """
+        return qty <= self.qty_in_stock

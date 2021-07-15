@@ -19,6 +19,8 @@ class Order(models.Model):
         default=enums.OrderStatuses.CREATED,
         max_length=100,
     )
+    def __str__(self):
+        return f'Order #{self.pk} for {self.owner.get_full_name()}'
 
 
 class OrderItem(models.Model):
