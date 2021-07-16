@@ -87,6 +87,8 @@ def deduct_from_cart(request):
             },
             status=400
         )
+    # Cast product_id to string
+    product_id = str(product_id)
     # try to minus qty
     try:
         request.session['cart'][product_id] -= 1
