@@ -30,6 +30,7 @@
       <list>
         <option value="$MODULE_DIR$/DjangoProject/firstApp/templates" />
         <option value="$MODULE_DIR$/DjangoProject/inventory/templates" />
+        <option value="$MODULE_DIR$/DjangoProject/store/templates" />
       </list>
     </option>
   </component>

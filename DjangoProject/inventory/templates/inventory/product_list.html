@@ -1,5 +1,12 @@
 {% extends 'firstApp/BaseTemplate.html' %}
 {% load static %}
+
+{% block page_header_title %}
+    {{ page_title }}
+{% endblock %}
+
+
+
 {% block content %}
     {% for product in object_list %}
         <div class="container">
@@ -21,10 +28,10 @@
                 <p>{{ product.description|truncatewords:10 }}</p>
                 {#                    truncatwords just show ten words here and | is used to filter#}
                 {# like button for the post #}
-                <h4 class="h4">Price  : {{ product.price }}</h4>
+                <h4 class="h4">Price : {{ product.price }}</h4>
                 <a href="{% url 'store:add-to-cart' product.pk %}" class="btn btn-dark rounded">Add to cart 🛒</a>
-                </div>
             </div>
+        </div>
         </div>
     {% endfor %}
 {% endblock %}

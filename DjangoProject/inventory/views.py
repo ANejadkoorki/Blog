@@ -12,3 +12,5 @@ class ListProductView(ListView):
     queryset = models.Product.objects.filter(
         is_active=True,
     )
+
+    extra_context = {'page_title': 'Products'}

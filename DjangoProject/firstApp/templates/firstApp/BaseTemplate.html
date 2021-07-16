@@ -48,6 +48,9 @@
                         <a class="nav-link" href="{% url 'users:edit-profile' %}">{{ request.user.get_full_name }}</a>
                     </li>
                 {% endif %}
+                <li class="nav-item ">
+                    <a class="nav-link" href="{% url 'store:view-cart' %}">cart 🛒</a>
+                </li>
             </ul>
         </div>
     </nav>

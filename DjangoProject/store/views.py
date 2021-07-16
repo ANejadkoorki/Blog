@@ -22,11 +22,27 @@ def add_to_cart(request, product_id):
     if 'cart' not in request.session.keys():
         request.session['cart'] = list()
 
-    request.session['cart'].append({
+    request.session['cart'] += [{
         'product_id': product_instance.pk,
         'qty': 1,
-    })
+    }]
 
     messages.success(request, f'The product \"{product_instance.name}\" added to cart .')
     return redirect('inventory:list')
 
+
+def view_cart(request):
+    object_list = []
+
+    for item in request.session['cart']:
+        object_list += [
+            {
+                'product': inventorymodels.Product.objects.get(pk=item.get('product_id')),
+                'qty': item['qty'],
+            }
+        ]
+
+    return render(request, 'store/view_cart.html', context={
+        'page_title': 'cart',
+        'object_list': object_list
+    })
