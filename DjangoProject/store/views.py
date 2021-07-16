@@ -7,6 +7,9 @@ from inventory import models as inventorymodels
 
 
 def add_to_cart(request, product_id):
+    """
+        add a product to cart
+    """
     product_instance = get_object_or_404(klass=inventorymodels.Product, pk=product_id)
 
     # check if product can be sold
@@ -29,13 +32,16 @@ def add_to_cart(request, product_id):
     else:
         request.session['cart'][str(product_instance.pk)] = 1
     # save the Session
-    request.session.save()
+    request.session.modified = True
 
     messages.success(request, f'The product \"{product_instance.name}\" added to cart .')
     return redirect('inventory:list')
 
 
 def view_cart(request):
+    """
+        renders the cart items.
+    """
     object_list = []
 
     for item in request.session.get('cart', []):
@@ -50,3 +56,13 @@ def view_cart(request):
         'page_title': 'cart',
         'object_list': object_list
     })
+
+
+def deletee_row(request, product_id):
+    """
+        deletes a product row
+    """
+    request.session['cart'].pop(str(product_id), None)
+    request.session.modified = True
+    messages.success(request, 'Removed Successfully.')
+    return  redirect('store:view-cart')
