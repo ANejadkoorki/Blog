@@ -34,7 +34,7 @@ def add_to_cart(request, product_id):
 def view_cart(request):
     object_list = []
 
-    for item in request.session['cart']:
+    for item in request.session.get('cart', []):
         object_list += [
             {
                 'product': inventorymodels.Product.objects.get(pk=item.get('product_id')),
