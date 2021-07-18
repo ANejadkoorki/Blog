@@ -4,6 +4,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from inventory import models as inventorymodels
+from rest_framework import viewsets
+from . import models, serializers
 
 
 # Create your views here.
@@ -110,3 +112,15 @@ def deduct_from_cart(request):
             status=400
         )
 
+
+"""
+   DRF REST Views
+"""
+
+
+class OrderViewSet(viewsets.ModelViewSet):
+    """
+        Viewset for store.Order
+    """
+    queryset = models.Order.objects.all()
+    serializer_class = serializers.OrderSeralizer
