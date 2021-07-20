@@ -1,0 +1,71 @@
+{% extends 'firstApp/BaseTemplate.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% block page_header_title %}
+        Log in
+    {% endblock %}
+
+</head>
+<body>
+{% block nav %}
+    <nav class="navbar navbar-expand-lg navbar-light bg-success  ">
+        <a class="navbar-brand mb-0 h1" href="{% url 'firstApp:posts' %}">My Blog</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item active ">
+                    <a class="nav-link" href="{% url 'firstApp:posts' %}">Home </a>
+                </li>
+                {% if not user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'users:login' %}">Log in</a>
+                    </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'firstApp:create-post' %}">Create Post</a>
+                </li>
+                {% if  user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'users:logout' %}">Log out</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <h1 class="h1">Log in : </h1>
+        <div class="row mt-1 md-1 ">
+            <div class="col-6 ml-1">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group mt-4">
+                        <label for="username">Username</label>
+                        <input id="username" name="username" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" class="form-control">
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-2">Submit</button>
+                </form>
+            </div>
+            <div class="col-6 mt-1 mr-1 ">
+                <p class="bp3-icon-paragraph">
+                    In computer security, logging in (or logging on, signing in, or signing on) is the process by which
+                    an
+                    individual gains access to a computer system by identifying and authenticating themselves. The user
+                    credentials are typically some form of "username" and a matching "password", and these credentials
+                    themselves are sometimes referred to as a login (or logon, sign-in, sign-on). In practice, modern
+                    secure
+                    systems often require a second factor such as email or SMS confirmation for extra security.
+                </p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+</body>
+</html>
