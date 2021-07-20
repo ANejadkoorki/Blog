@@ -39,11 +39,16 @@
         {% endfor %}
         </tbody>
     </table>
+    <div class="container mt-2 row-cols-md-1">
+        <a class="btn btn-primary" href="{% url 'store:finalize' %}">
+            Order
+        </a>
+    </div>
 {% endblock %}
 
 {% block page-scripts %}
     <script>
-         $(document).ready(function () {
+        $(document).ready(function () {
             $('a.deduct-btn').click(function (event) {
                 // Get the product id from the element that was clicked using
                 // dataset attrib.

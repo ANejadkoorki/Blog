@@ -42,3 +42,13 @@ class Product(models.Model):
             Is Product in stock with requested qty ? : returns a boolean :
         """
         return qty <= self.qty_in_stock
+
+    def deduct_from_stock(self,qty):
+        """
+            deducts the qty from self.qty_in_stock
+            returns:int
+        """
+        self.qty_in_stock -= qty
+        self.save()
+        return self.qty_in_stock
+

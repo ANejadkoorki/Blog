@@ -1,8 +1,11 @@
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
+from django.views.generic import ListView
 from inventory import models as inventorymodels
 from rest_framework import viewsets
 from . import models, serializers
@@ -124,3 +127,45 @@ class OrderViewSet(viewsets.ModelViewSet):
     """
     queryset = models.Order.objects.all()
     serializer_class = serializers.OrderSeralizer
+
+
+@login_required
+def finalize_order(request):
+    """
+        finalize order
+    """
+    cart = request.session.get('cart', None)
+    # if cart does not exist
+    if not cart:
+        messages.error(request, 'Your Cart Is Empty.')
+        return redirect('inventory:list')
+
+    order_instance = models.Order.objects.create(owner=request.user)
+
+    for product_id in cart:
+        product = inventorymodels.Product.objects.get(pk=product_id)
+        qty = cart[product_id]
+        if not product.is_in_stock(qty):
+            messages.error(request, f'The {product.name} with this qty doesn\'t exist ')
+            return redirect('store:view-cart')
+        order_item_instance = models.OrderItem.objects.create(
+            order=order_instance,
+            product=product,
+            qty=qty,
+            price=product.price,
+        )
+        # deduct from stock
+        product.deduct_from_stock(qty)
+    messages.info(request, 'Order Submitted Successfully.')
+    request.session.pop('cart')
+    request.session.modified = True
+    return redirect('inventory:list')
+
+
+class ListOrdersView(LoginRequiredMixin, ListView):
+    model = models.Order
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        qs = qs.filter(owner=self.request.user)
+        return qs

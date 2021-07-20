@@ -1,0 +1,27 @@
+{% extends 'firstApp/BaseTemplate.html' %}
+{% block content %}
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Order Date</th>
+                <th>Status</th>
+                <th>Products</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in object_list %}
+                <tr>
+                    <td>{{ order.pk }}</td>
+                    <td>{{ order.created_on }}</td>
+                    <td>{{ order.get_status_display }}</td>
+                    <td>
+                        {% for item in order.orderitem_set.all %}
+                            <p>{{ forloop.counter }}- {{ item.product }} ❎ {{ item.qty }}</p>
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
