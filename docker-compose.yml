@@ -1,0 +1,20 @@
+version: '3'
+volumes:
+  FirstAppDbData:
+services:
+  database:
+    image: "postgres:10-alpine"
+    ports:
+    - 5432:5432
+    environment:
+      POSTGRES_USER: usr_firstApp
+      POSTGRES_PASSWORD: amirpostgres
+      PGPASSWORD: amirpostgres
+      POSTGRES_DB: firstApp_DB
+      PGDATA: /db_data
+    volumes:
+    - FirstAppDbData:/db_data
+  cache:
+    image: "memcached:alpine"
+    ports:
+    - 11211:11211

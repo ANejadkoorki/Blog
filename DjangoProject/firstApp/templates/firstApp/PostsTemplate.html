@@ -1,7 +1,9 @@
 {% extends 'firstApp/BaseTemplate.html' %}
+{% load cache %}
 {% load static %}
 
 {% block content %}
+    {% cache 3600 categories_sidebar %}
     <div class="col-4">
         <h2 class="h2">Filter By Category :</h2>
         <ul>
@@ -12,36 +14,9 @@
             {% endfor %}
         </ul>
     </div>
+    {% endcache %}
     <div class="row">
         {% for post in object_list %}
-            <div class="container col-8">
-                <div class="col-md-12">
-                    {% if post.intro_image %}
-                        <a href="{% url 'firstApp:details' post.pk %}">
-                            <img class="img-thumbnail" src="{{ post.intro_image.url }}">
-                        </a>
-                    {% else %}
-                        <a href="{% url 'firstApp:details' post.pk %}">
-                            <img class="img-thumbnail" src="{% static 'img/placeholder.jpg' %}">
-                        </a>
-                    {% endif %}
-                    <div class="d-flex">
-                        <h1 class="">
-                            <a href="{% url 'firstApp:details' post.pk %}">{{ post.title }}</a>
-                        </h1>
-                    </div>
-                    <p>{{ post.body|truncatewords:10 }}</p>
-                    {#                    truncatwords just show ten words here and | is used to filter#}
-                    {# like button for the post #}
-                    <a class="btn btn-outline-dark text-danger likes-btn" data-post-id="{{ post.id }}">❤ Like (<span
-                            id="like-count-{{ post.id }}">{{ post.likes }}</span> Likes) </a>
-                    <div>
-                        <span class="badge">Posted by {{ post.creator.username }} on {{ post.time }}</span>
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
-        {% for post in object_list2 %}
             <div class="container col-8">
                 <div class="col-md-12">
                     {% if post.intro_image %}
@@ -69,6 +44,11 @@
                 </div>
             </div>
         {% endfor %}
+        <div class="container col-8">
+            <div class="col-md-12">
+                {% include 'firstApp/pagination.html' %}
+            </div>
+        </div>
     </div>
 {% endblock %}
 {% block page-scripts %}

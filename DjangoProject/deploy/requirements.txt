@@ -1,0 +1,6 @@
+Django
+django-jalali
+psycopg2-binary
+Pillow
+django-rest-framework
+pymemcache

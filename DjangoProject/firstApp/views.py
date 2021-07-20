@@ -1,10 +1,14 @@
+import itertools
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.core.exceptions import PermissionDenied
+from django.core.paginator import Paginator
 from django.http import JsonResponse, HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
+from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.views.generic import CreateView, DetailView, UpdateView, ListView
@@ -13,8 +17,6 @@ from . import models, forms
 
 
 # Create your views here.
-
-
 def post_view(request):
     if request.user.is_authenticated:
         my_posts = models.Post.objects.filter(creator=request.user)
@@ -22,12 +24,19 @@ def post_view(request):
     else:
         my_posts = models.Post.objects.all()
         other_posts = []
+    # Combine two querysets into one list
+    qs = list(itertools.chain(my_posts, other_posts))
+    # Paginate by using pagination class
+    paginated = Paginator(qs, 2)
+
+    # Now which page are you looking for?
+    paginated_page = paginated.get_page(request.GET.get('page', 1))
 
     return render(request,
                   template_name='firstApp/PostsTemplate.html',
                   context={
-                      'object_list': my_posts,
-                      'object_list2': other_posts,
+                      'object_list': paginated_page,
+                      'page_obj': paginated,
                       'page_title': 'Posts',
                   }
                   )
