@@ -1,3 +1,4 @@
+import logging
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -12,7 +13,7 @@ from . import models, serializers
 
 
 # Create your views here.
-
+logger = logging.getLogger(__name__)
 
 def add_to_cart(request, product_id):
     """
@@ -157,6 +158,7 @@ def finalize_order(request):
         # deduct from stock
         product.deduct_from_stock(qty)
     messages.info(request, 'Order Submitted Successfully.')
+    logger.info(f'the user {request.user} placed order {order_instance.pk}')
     request.session.pop('cart')
     request.session.modified = True
     return redirect('inventory:list')
@@ -164,6 +166,7 @@ def finalize_order(request):
 
 class ListOrdersView(LoginRequiredMixin, ListView):
     model = models.Order
+    paginate_by = 5
 
     def get_queryset(self):
         qs = super().get_queryset()

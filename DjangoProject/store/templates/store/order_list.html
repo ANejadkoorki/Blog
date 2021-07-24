@@ -1,27 +1,42 @@
 {% extends 'firstApp/BaseTemplate.html' %}
+{% load i18n %}
+{% get_current_language_bidi as LANGUAGE_BIDI %}
+{% load mytags %}
 {% block content %}
-    <table class="table table-striped table-bordered">
-        <thead>
+    <div class="container">
+        <h1 class="text-success">
+            <i class="fa fa-shopping-basket"></i>
+            {% trans 'My Orders' %}
+        </h1>
+        <table class="table table-striped table-bordered " style="direction: rtl">
+            <thead>
             <tr>
-                <th>Order ID</th>
-                <th>Order Date</th>
-                <th>Status</th>
-                <th>Products</th>
+                <th class="rtl">{% trans 'Order ID' %}</th>
+                <th class="rtl">{% trans 'Order Date' %}</th>
+                <th class="rtl">{% trans 'Status' %}</th>
+                <th class="rtl">{% trans 'Products' %}</th>
+                <th class="rtl">{% trans 'Total Quantity Of Products' %}</th>
+                <th class="rtl">{% trans 'Total Pay' %}</th>
+
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             {% for order in object_list %}
                 <tr>
                     <td>{{ order.pk }}</td>
-                    <td>{{ order.created_on }}</td>
+                    <td>{{ order.created_on|jdate:"%Y-%m-%d  %H:%M" }}</td>
                     <td>{{ order.get_status_display }}</td>
                     <td>
                         {% for item in order.orderitem_set.all %}
                             <p>{{ forloop.counter }}- {{ item.product }} ❎ {{ item.qty }}</p>
                         {% endfor %}
                     </td>
+                    <td>{{ order.get_total_qty }}</td>
+                    <td></td>
                 </tr>
             {% endfor %}
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+        {% include 'firstApp/pagination.html' %}
+    </div>
 {% endblock %}
