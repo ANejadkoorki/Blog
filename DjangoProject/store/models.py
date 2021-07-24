@@ -65,6 +65,12 @@ class Order(models.Model):
         t = self.orderitem_set.aggregate(Sum('qty'))
         return t.get('qty__sum', 0)
 
+    def get_grand_total(self):
+        t = 0
+        for item in self.orderitem_set.all():
+            t += item.qty * item.price
+        return t
+
 
 class OrderItem(models.Model):
     """

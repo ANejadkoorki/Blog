@@ -32,7 +32,10 @@
                         {% endfor %}
                     </td>
                     <td>{{ order.get_total_qty }}</td>
-                    <td></td>
+                    <td>
+                        {{ order.get_grand_total }}
+                        ریال
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>
