@@ -8,8 +8,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.views.generic import ListView
 from inventory import models as inventorymodels
-from rest_framework import viewsets, permissions
-from . import models, serializers
+from rest_framework import viewsets
+
+from . import models, serializers, permissions
 
 # Create your views here.
 logger = logging.getLogger(__name__)
@@ -128,7 +129,7 @@ class OrderViewSet(viewsets.ModelViewSet):
     """
     queryset = models.Order.objects.all()
     serializer_class = serializers.OrderSeralizer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsOwnerOrReadOnly]
 
 
 @login_required
