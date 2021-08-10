@@ -4,3 +4,4 @@ psycopg2-binary
 Pillow
 django-rest-framework
 pymemcache
+django-widget-tweaks

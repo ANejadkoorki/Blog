@@ -1,7 +1,7 @@
 import logging
 from django.contrib.auth import get_user_model
 from django.db import models
-from django.db.models import Sum
+from django.db.models import Sum, F
 from django_jalali.db import models as jmodels
 from django.utils.translation import ugettext_lazy as _
 from . import enums
@@ -66,16 +66,18 @@ class Order(models.Model):
         return t.get('qty__sum', 0)
 
     def get_grand_total(self):
-        t = 0
-        for item in self.orderitem_set.all():
-            t += item.qty * item.price
-        return t
-
-
-
-
-
-
+        """
+            unefficiant way
+        """
+        # t = 0
+        # for item in self.orderitem_set.all():
+        #     t += item.qty * item.price
+        # return t
+        """
+            efficiant way
+        """
+        return self.orderitem_set.all().annotate(grand_total=F('qty') * F('price'))\
+            .aggregate(Sum('grand_total')).get('grand_total__sum', 0)
 
 
 class OrderItem(models.Model):

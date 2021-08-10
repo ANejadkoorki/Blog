@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'django_static_fontawesome',
+    'widget_tweaks',
     'firstApp',
     'users',
     'inventory',
@@ -125,6 +126,9 @@ TIME_ZONE = 'Asia/Tehran'
 USE_I18N = True
 
 USE_L10N = True
+
+USE_THOUSAND_SEPARATOR = True
+NUMBER_GROUPING = 3
 
 USE_TZ = True
 

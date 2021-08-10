@@ -1,4 +1,5 @@
 {% extends 'firstApp/BaseTemplate.html' %}
+{% load widget_tweaks %}
 {% block page_header_title %}
     {{ page_title }}
 {% endblock %}
@@ -9,14 +10,12 @@
             {% csrf_token %}
             <div class="form-group">
                 <label for="title">Title</label>
-                <input type="text" class="form-control" id="title" name="title"
-                       value="{{ form.instance.title }}" placeholder="Enter The Title Of Post">
+
+                {{ form.title|add_class:"form-control" }}
             </div>
             <div class="form-group">
                 <label for="body">Content</label>
-                <textarea type="text" class="form-control" cols="50" rows="10" id="body"
-                          placeholder="Enter The Content of Your Post"
-                          name="body">{{ form.instance.body }}</textarea>
+                {{ form.body|add_class:"form-control"|attr:"cols:50"|attr:"rows:10" }}
             </div>
             <div class="form-group">
                 {{ form.intro_image }}
