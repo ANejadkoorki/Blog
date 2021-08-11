@@ -12,6 +12,18 @@ from .signals import order_placed
 logger = logging.getLogger(__name__)
 
 
+class OrderQuerySetManager(models.QuerySet):
+    """
+        Custom Object Manager for Order Model
+    """
+
+    def filter_by_owner(self, user):
+        """
+            filters objects by owner field
+        """
+        return self.filter(owner=user)
+
+
 class Order(models.Model):
     """
     Represents an order
@@ -25,6 +37,8 @@ class Order(models.Model):
         default=enums.OrderStatuses.CREATED,
         max_length=100,
     )
+
+    objects = OrderQuerySetManager().as_manager()
 
     def __str__(self):
         return f'Order #{self.pk} for {self.owner.get_full_name()}'
@@ -76,7 +90,7 @@ class Order(models.Model):
         """
             efficiant way
         """
-        return self.orderitem_set.all().annotate(grand_total=F('qty') * F('price'))\
+        return self.orderitem_set.all().annotate(grand_total=F('qty') * F('price')) \
             .aggregate(Sum('grand_total')).get('grand_total__sum', 0)
 
 

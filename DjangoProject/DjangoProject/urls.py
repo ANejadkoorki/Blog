@@ -17,6 +17,16 @@ import debug_toolbar
 from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from store import views as store_views
+from users import views as users_views
+
+router = DefaultRouter()
+router.register('users', users_views.UserViewSet)
+router.register('store/orders', store_views.OrderViewSet)
+router.register('store/orderitems', store_views.OrderItemViewSet)
+
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,6 +35,7 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('inventory/', include('inventory.urls')),
     path('store/', include('store.urls')),
+    path('api/v1/', include(router.urls))
 ]
 
 # add django debug toolbar if we are in debug mode

@@ -7,10 +7,13 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.views.generic import ListView
-from inventory import models as inventorymodels
-from rest_framework import viewsets
+from rest_framework.decorators import action
+from rest_framework.exceptions import NotAuthenticated
 
-from . import models, serializers, permissions
+from inventory import models as inventorymodels
+from rest_framework import viewsets, permissions, status
+
+from . import models, serializers, permissions as my_permissions
 
 # Create your views here.
 logger = logging.getLogger(__name__)
@@ -129,7 +132,36 @@ class OrderViewSet(viewsets.ModelViewSet):
     """
     queryset = models.Order.objects.all()
     serializer_class = serializers.OrderSeralizer
-    permission_classes = [permissions.IsOwnerOrReadOnly]
+    permission_classes = [my_permissions.IsOwnerOrReadOnly]
+
+    # def filter_queryset(self, queryset):
+    #     super().filter_queryset(queryset)
+    #     return queryset.filter(owner=self.request.user)
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if self.request.user.is_anonymous:
+            raise NotAuthenticated('You need to be Logged In')
+        return qs.filter_by_owner(self.request.user)
+
+    @action(detail=True, description='Cancels an order', )
+    def cancel_order(self, request, *args, **kwargs):
+        """
+            cancels an order
+        """
+        order_instance = self.get_object()
+        order_instance.set_as_canceled()
+        order_serializer = self.get_serializer(instance=order_instance)
+        return JsonResponse(data=order_serializer.data, status=status.HTTP_202_ACCEPTED)
+
+
+class OrderItemViewSet(viewsets.ModelViewSet):
+    """
+        Viewset for store.OrderItem
+    """
+    queryset = models.OrderItem.objects.all()
+    serializer_class = serializers.OrderItemSerializer
+    permission_classes = [my_permissions.IsOwnerOfParentOrReadOnly]
 
 
 @login_required
